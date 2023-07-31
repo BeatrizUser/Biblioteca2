@@ -18,6 +18,7 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.nome
+        
 class Exemplar(models.Model):
     codigo = models.CharField(max_length=5, primary_key=True, unique=True, editable=False)
 

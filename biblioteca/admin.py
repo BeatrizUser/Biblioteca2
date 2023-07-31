@@ -59,8 +59,7 @@ class ClienteAdmin(admin.ModelAdmin):
 
     def imagem_preview(self, obj):
         if obj.foto:
-            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;" />', obj.foto.url)
-        else:
-            return "Sem foto"
+            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;">', obj.foto.url)
+        return '(Sem foto)'
 
     imagem_preview.short_description = 'Foto'
