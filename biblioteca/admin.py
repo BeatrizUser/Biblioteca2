@@ -53,10 +53,11 @@ class EstoqueAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'endereco', 'email', 'imagem_preview')
+    list_display = ('imagem_preview', 'nome', 'endereco', 'email')
     search_fields = ('nome', 'endereco', 'email')
 
     def imagem_preview(self, obj):
-        return obj.foto.url if obj.foto else None
+        return f'<img src="{obj.foto.url}" style="max-height: 50px; max-width: 50px;" />' if obj.foto else None
 
+    imagem_preview.allow_tags = True
     imagem_preview.short_description = 'Foto'
