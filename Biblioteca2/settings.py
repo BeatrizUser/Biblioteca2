@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,156 @@ INSTALLED_APPS = [
     'biblioteca',
 ]
 
+JAZZMIN_SETTINGS = {
+    # Título da janela (padrão: "Library Admin" se ausente ou None)
+    "site_title": "Biblioteca",
+
+    # Título na tela de login (máx. 19 caracteres) (padrão: "Library" se ausente ou None)
+    "site_header": "Biblioteca",
+
+    # Título na marca (máx. 19 caracteres) (padrão: "Library" se ausente ou None)
+    "site_brand": "Biblioteca",
+
+    # Logo para o site, deve estar presente em arquivos estáticos, usado para a marca no canto superior esquerdo
+    "site_logo": "/img/logo.png",
+
+    # Classes CSS aplicadas ao logo acima
+    "site_logo_classes": "img-square",
+
+    # Caminho relativo para um favicon para o site
+    "site_icon": "/img/logo.png",
+
+    # Texto de boas-vindas na tela de login
+    "welcome_sign": "Bem-vindo à biblioteca",
+
+    # Direitos autorais no rodapé
+    "copyright": "Beatriz Machado",
+
+    # Lista de administradores de modelos para pesquisar na barra de pesquisa, a barra de pesquisa será omitida se estiver ausente
+    "search_model": ["biblioteca.Livro"],
+
+    # Nome do campo no modelo de usuário que contém a imagem de perfil (ImageField/URLField/CharField ou função chamada com o usuário)
+    "user_avatar": None,
+
+    ############
+    # Menu Superior #
+    ############
+
+    # Links para incluir no menu superior
+    "topmenu_links": [
+
+        # URL para ser revertida (Permissões podem ser adicionadas)
+        {"name": "Início",  "url": "admin:index"},
+
+        {"name": "Pesquisar", "url": "/pesquisar"},
+
+        # Aplicação com menu suspenso para todas as páginas de seus modelos (Permissões verificadas nos modelos)
+        {"app": "biblioteca"},
+    ],
+
+    #############
+    # Menu de Usuário #
+    #############
+
+    # Links adicionais para incluir no menu de usuário no canto superior direito (tipo de URL "app" não é permitido)
+    "usermenu_links": [
+        {"name": "Suporte", "url": "https://wa.me/5521991986769", "new_window": True},
+    ],
+
+    #############
+    # Menu Lateral #
+    #############
+
+    # Exibir o menu lateral
+    "show_sidebar": True,
+
+    # Expansão automática do menu
+    "navigation_expanded": True,
+
+    # Ocultar essas aplicações ao gerar o menu lateral (por exemplo: "auth")
+    "hide_apps": [],
+
+    # Ocultar esses modelos ao gerar o menu lateral (por exemplo: "auth.user")
+    "hide_models": [],
+
+    # Lista de aplicações (e/ou modelos) para basear a ordem do menu lateral (não precisa conter todas as aplicações/modelos)
+    "order_with_respect_to": ["biblioteca", "biblioteca.Livro"],
+
+    # Links personalizados para adicionar aos grupos de aplicações, indexados pelo nome da aplicação
+    "custom_links": {
+        "ba": [{
+            "name": "Gerar Mensagens", 
+            "url": "make_messages", 
+            "icon": "fas fa-comments",
+            "permissions": ["books.view_book"]
+        }]
+    },
+
+    # Ícones personalizados para aplicações/modelos no menu lateral
+    "icons": {
+        "auth": "fas fa-book-open",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+
+    # Ícones padrão para pais e filhos no menu lateral quando não especificado manualmente
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-book-open",
+
+    #################
+    # Modal Relacionado #
+    #################
+    # Usar modais em vez de pop-ups
+    "related_modal_active": True,
+
+    #############
+    # Ajustes da IU #
+    #############
+
+    # Se deve ou não linkar a fonte do fonts.googleapis.com (use custom_css para fornecer a fonte)
+    "use_google_fonts_cdn": True,
+
+    # Exibir ou não o customizador da IU na barra lateral
+    "show_ui_builder": False,
+  
+    # Adicionar um seletor de idioma no admin
+    "language_chooser": False,
+}
+
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": "navbar-secondary",
+    "accent": "accent-primary",
+    "navbar": "navbar-gray-dark navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": True,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": True,
+    "theme": "minty",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-outline-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": True
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -49,6 +200,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'biblioteca.middleware.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'Biblioteca2.urls'
@@ -118,7 +270,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+# STATIC_ROOT = BASE_DIR / 'static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
