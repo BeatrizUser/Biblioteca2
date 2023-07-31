@@ -9,7 +9,7 @@ class Livro(models.Model):
     titulo = models.CharField(max_length=100)
     autor = models.CharField(max_length=100)
     editora = models.CharField(max_length=100)
-    ano_public = models.IntegerField()
+    ano_public = models.CharField(max_length=10)
 
     def __str__(self):
         return self.titulo
@@ -21,7 +21,7 @@ def gerar_nome_arquivo(instance, filename):
     novo_nome = f"{instance.nome.replace(' ', '_').lower()}_img.{ext}"
     # Retornar o caminho completo para o upload
     return os.path.join('clientes/', novo_nome)
-    
+
 class Cliente(models.Model):
     nome = models.CharField(max_length=100)
     endereco = models.CharField(max_length=200)
@@ -55,7 +55,6 @@ pre_save.connect(atualizar_arquivo_foto, sender=Cliente)
 
 class Exemplar(models.Model):
     codigo = models.CharField(max_length=5, primary_key=True, unique=True, editable=False)
-
     def _gerar_codigo_aleatorio(self):
         return str(random.randint(10000, 99999))
 
@@ -74,7 +73,7 @@ class Exemplar(models.Model):
 
 class Emprestimo(models.Model):
     data_emprestimo = models.DateTimeField(auto_now_add=True)
-    data_devolucao = models.DateTimeField()
+    data_devolucao = models.DateField(null=True, blank=True)
     exemplares = models.ManyToManyField(Exemplar)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 

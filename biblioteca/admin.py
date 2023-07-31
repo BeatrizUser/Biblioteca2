@@ -12,8 +12,6 @@ class LivroAdmin(admin.ModelAdmin):
         # Verifica se é um novo livro sendo criado (não uma edição)
         if not obj.pk:
             obj.save()  # Salva o livro para obter o ID gerado automaticamente
-            # Agora podemos exibir o código gerado
-            self.message_user(request, f'O código do livro gerado é: {obj.exemplar.codigo}', level='SUCCESS')
         else:
             obj.save()
 
@@ -27,9 +25,13 @@ class ExemplarAdmin(admin.ModelAdmin):
 # Registrar o modelo Emprestimo
 @admin.register(Emprestimo)
 class EmprestimoAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'data_emprestimo', 'data_devolucao')
+    list_display = ('cliente', 'data_emprestimo', 'data_devolucao', 'exemplares_emprestados')
     list_filter = ('cliente__nome', 'data_emprestimo', 'data_devolucao')
     search_fields = ('cliente__nome',)
+
+    def exemplares_emprestados(self, obj):
+        return ", ".join([exemplar.codigo for exemplar in obj.exemplares.all()])
+    exemplares_emprestados.short_description = 'Exemplares Emprestados'
 
 # Registrar o modelo Venda
 @admin.register(Venda)
