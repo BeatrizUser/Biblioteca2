@@ -57,7 +57,9 @@ class ClienteAdmin(admin.ModelAdmin):
     search_fields = ('nome', 'endereco', 'email')
 
     def imagem_preview(self, obj):
-        return f'<img src="{obj.foto.url}" style="max-height: 50px; max-width: 50px;" />' if obj.foto else None
+        if obj.foto:
+            return format_html('<img src="{}" style="max-height: 50px; max-width: 50px;" />', obj.foto.url)
+        else:
+            return "Sem foto"
 
-    imagem_preview.allow_tags = True
     imagem_preview.short_description = 'Foto'
