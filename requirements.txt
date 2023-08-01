@@ -8,7 +8,8 @@ pytz==2023.3
 requests==2.31.0
 sqlparse==0.4.4
 urllib3==2.0.4
-pip==21.2.4
+pip
 gunicorn==20.1.0
 whitenoise==6.5.0
 Pillow
+
