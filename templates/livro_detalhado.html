@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+  {% if livro %}
+    <div class="row">
+      <div class="col-md-4">
+        <img
+            src="{% if book.cover_url %}{{ book.cover_url }}{% else %}{% static 'img/no_image_available.png' %}{% endif %}"
+            class="card-img-top"
+            alt="{{ book.title }}"
+          />
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ livro.title }}</h5>
+            <p class="card-text">Autor: {{ livro.author }}</p>
+            <p class="card-text">Editora: {{ livro.publisher }}</p>
+            <p class="card-text">Data de publicação: {{ livro.publishedDate }}</p>
+            <p class="card-text">{% autoescape off %}{{ livro.descricao }}{% endautoescape %}</p>
+            <a href="/admin/biblioteca/livro/add/?titulo={{livro.title}}&editora={{livro.publisher}}&ano_public={{livro.publishedDate}}&autor={{livro.author}}" class="btn btn-primary">Cadastrar</a>
+            <a href="{{ livro.previewLink }}" class="btn btn-primary">Prévia</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>Livro não encontrado.</p>
+  {% endif %}
+</div>
+{% endblock %}
