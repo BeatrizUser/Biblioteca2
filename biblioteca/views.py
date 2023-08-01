@@ -17,6 +17,7 @@ def buscar_livro(request):
             for item in data['items']:
                 bookId = item['id']
                 titulo = item['volumeInfo'].get('title', 'Desconhecido')
+                category = ', '.join(item['volumeInfo'].get('categories', ['N/A']))
                 autor = ', '.join(item['volumeInfo'].get('authors', ['Desconhecido']))
                 editora = item['volumeInfo'].get('publisher', 'Editora desconhecida.')
                 ano_public = item['volumeInfo'].get('publishedDate', '')
@@ -28,7 +29,8 @@ def buscar_livro(request):
                     'author': autor,
                     'publisher': editora,
                     'publishedDate': ano_public,
-                    'cover_url' : cover_url
+                    'cover_url' : cover_url,
+                    'category': category,
                 }
                 books.append(book)
     else:
@@ -47,6 +49,7 @@ def livro_detalhado(request, bookId):
         if 'volumeInfo' in data:
             book_Id = data['id']
             volume_info = data['volumeInfo']
+            titulo = volume_info.get('title', 'Desconhecido')
             titulo = volume_info.get('title', 'Desconhecido')
             autor = ', '.join(volume_info.get('authors', ['Desconhecido']))
             editora = volume_info.get('publisher', 'Editora desconhecida.')

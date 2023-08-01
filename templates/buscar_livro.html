@@ -15,7 +15,7 @@
         aria-label="Pesquisar livro"
         aria-describedby="search-btn"
       />
-      <button class="btn btn-outline-secondary" type="submit" id="search-btn">
+      <button class="btn btn-outline-secondary ml-2" type="submit" id="search-btn">
         Buscar
       </button>
     </div>
@@ -24,34 +24,35 @@
   {% if books %}
   <div class="row">
     {% for book in books %}
-      <div class="col-lg-3 col-md-4 col-sm-6 mb-2 d-flex">
-        <div class="card h-90">
-          <img
-            src="{% if book.cover_url %}{{ book.cover_url }}{% else %}{% static 'img/no_image_available.png' %}{% endif %}"
-            class="card-img-top"
-            alt="{{ book.title }}"
-          />
-          <div class="card-body">
-            <h5 class="card-title text-md mb-2">{{ book.title }}</h5>
-            <p class="card-text text-sm mb-1">Autor: {{ book.author }}</p>
-            <p class="card-text text-sm mb-1">Categoria: {{ book.category }}</p>
-            {% if book.title %}
-            <div class="row texte-center justify-content">
-                <a href="/livro/{{book.id}}"><button class="btn btn-danger mr-2">Detalhes</button></a>
-                <a href="/admin/biblioteca/livro/add/?titulo={{book.title}}&editora={{book.publisher}}&ano_public={{book.publishedDate}}&autor={{book.author}}" class="btn btn-primary">Cadastrar</a>
+      <div class="col-md-12 mb-1">
+        <div class="card d-flex flex-row">
+          <div class="card-image">
+            <img
+              src="{% if book.cover_url %}{{ book.cover_url }}{% else %}{% static 'img/no_image_available.png' %}{% endif %}"
+              class="card-img-top m-2"
+              alt="{{ book.title }}"
+            />
+          </div>
+          <div class="card-body ml-2">
+            <h5 class="card-title">{{ book.title }}</h5>
+            <p class="card-text">Autor: {{ book.author }}</p>
+            <p class="card-text">Categoria: {{ book.category }}</p>
+            <div class="d-flex justify-content-end mt-auto">
+              <a href="/livro/{{book.id}}"><button class="btn btn-danger mr-2">Detalhes</button></a>
+              <a href="/admin/biblioteca/livro/add/?titulo={{book.title}}&editora={{book.publisher}}&ano_public={{book.publishedDate}}&autor={{book.author}}" class="btn btn-primary">Cadastrar</a>
             </div>
-            {% endif %}
           </div>
         </div>
       </div>
     {% endfor %}
   </div>
-{% else %}
+  {% else %}
   {% if search_query %}
     <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
   {% endif %}
-{% endif %}
+  {% endif %}
 
 </div>
 {% endblock %}
+
 
