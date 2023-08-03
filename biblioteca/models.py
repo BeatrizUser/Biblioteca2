@@ -6,7 +6,6 @@ from django.db.models.signals import pre_save, post_delete
 
 
 class Livro(models.Model):
-    codigo = models.CharField(max_length=5, primary_key=True, unique=True, editable=False)
     titulo = models.CharField(max_length=100)
     autor = models.CharField(max_length=100)
     espirito = models.CharField(max_length=100)
