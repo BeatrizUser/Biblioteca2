@@ -14,11 +14,6 @@ class Livro(models.Model):
     def _gerar_codigo_aleatorio(self):
         return str(random.randint(10000, 99999))
 
-    def save(self, *args, **kwargs):
-        if not self.codigo:
-            self.codigo = self._gerar_codigo_aleatorio()
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return self.titulo
 
