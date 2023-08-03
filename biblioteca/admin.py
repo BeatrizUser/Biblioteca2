@@ -15,30 +15,20 @@ class LivroAdmin(admin.ModelAdmin):
         else:
             obj.save()
 
-# Registrar o modelo Exemplar
-@admin.register(Exemplar)
-class ExemplarAdmin(admin.ModelAdmin):
-    list_display = ('codigo', 'livro', 'estante', 'prateleira', 'localizacao')
-    list_filter = ('estante', 'prateleira', 'livro__titulo')
-    search_fields = ('codigo', 'livro__titulo')
-
 # Registrar o modelo Emprestimo
 @admin.register(Emprestimo)
 class EmprestimoAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'data_emprestimo', 'data_devolucao', 'exemplares_emprestados')
+    list_display = ('cliente', 'data_emprestimo', 'data_devolucao', 'livro')
     list_filter = ('cliente__nome', 'data_emprestimo', 'data_devolucao')
     search_fields = ('cliente__nome',)
 
-    def exemplares_emprestados(self, obj):
-        return ", ".join([exemplar.codigo for exemplar in obj.exemplares.all()])
-    exemplares_emprestados.short_description = 'Exemplares Emprestados'
 
 # Registrar o modelo Venda
 @admin.register(Venda)
 class VendaAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'exemplar', 'data_venda', 'preco')
+    list_display = ('cliente', 'livro', 'data_venda', 'preco')
     list_filter = ('cliente__nome', 'data_venda')
-    search_fields = ('cliente__nome', 'exemplar__livro__titulo')
+    search_fields = ('cliente__nome', 'livro__livro__titulo')
 
 # Registrar o modelo Funcionario
 @admin.register(Funcionario)

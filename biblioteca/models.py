@@ -6,10 +6,19 @@ from django.db.models.signals import pre_save, post_delete
 
 
 class Livro(models.Model):
+    codigo = models.CharField(max_length=5, primary_key=True, unique=True, editable=False)
     titulo = models.CharField(max_length=100)
     autor = models.CharField(max_length=100)
+    espirito = models.CharField(max_length=100)
     editora = models.CharField(max_length=100)
     ano_public = models.CharField(max_length=10)
+    def _gerar_codigo_aleatorio(self):
+        return str(random.randint(10000, 99999))
+
+    def save(self, *args, **kwargs):
+        if not self.codigo:
+            self.codigo = self._gerar_codigo_aleatorio()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.titulo
@@ -52,29 +61,10 @@ def atualizar_arquivo_foto(sender, instance, **kwargs):
 post_delete.connect(excluir_arquivo_foto, sender=Cliente)
 pre_save.connect(atualizar_arquivo_foto, sender=Cliente)
 
-
-class Exemplar(models.Model):
-    codigo = models.CharField(max_length=5, primary_key=True, unique=True, editable=False)
-    def _gerar_codigo_aleatorio(self):
-        return str(random.randint(10000, 99999))
-
-    def save(self, *args, **kwargs):
-        if not self.codigo:
-            self.codigo = self._gerar_codigo_aleatorio()
-        super().save(*args, **kwargs)
-
-    livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
-    estante = models.CharField(max_length=50)
-    prateleira = models.CharField(max_length=50)
-    localizacao = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.livro.titulo} - Exemplar {self.codigo}"
-
 class Emprestimo(models.Model):
     data_emprestimo = models.DateTimeField(auto_now_add=True)
     data_devolucao = models.DateField(null=True, blank=True)
-    exemplares = models.ManyToManyField(Exemplar)
+    livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -82,12 +72,12 @@ class Emprestimo(models.Model):
 
 class Venda(models.Model):
     data_venda = models.DateTimeField(auto_now_add=True)
-    exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
+    livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
     preco = models.FloatField()
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Venda de {self.exemplar.livro.titulo} em {self.data_venda}"
+        return f"Venda de {self.livro.titulo} em {self.data_venda}"
 
 class Funcionario(models.Model):
     nome = models.CharField(max_length=100)
@@ -98,9 +88,10 @@ class Funcionario(models.Model):
         return self.nome
 
 class Estoque(models.Model):
-    livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
+    livro = models.ForeignKey(Livro, on_delete=models.CASCADE, related_name='estoques')
     quantidade = models.PositiveIntegerField()
+    estante = models.CharField(max_length=50)
+    prateleira = models.CharField(max_length=50)
 
     def __str__(self):
         return f"{self.livro.titulo} - Quantidade: {self.quantidade}"
-
